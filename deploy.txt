@@ -1,3 +1,0 @@
-To Deploy this sub-branch to heroku
-
-git subtree push --prefix socsail-springboot/socsail-ng heroku-sailtrack-ng-deploy master

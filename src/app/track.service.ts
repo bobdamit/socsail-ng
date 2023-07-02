@@ -16,17 +16,14 @@ import { environment } from 'src/environments/environment';
 @Injectable({
 	providedIn: 'root'
 })
-export class TrackService implements HttpInterceptor {
+export class TrackService {
 
 	constructor(private http: HttpClient) {
 		this.url =
-    "https://sailtrack-service.herokuapp.com/track/query";
-   // "http://localhost:8080/track/query";
+    "https://rocksci-apps.xyz/api/socsail/track/query";
+   // "http://localhost:8889/api/socsail";
 	}
 
-	intercept(req: HttpRequest<any>, next: HttpHandler): import("rxjs").Observable<HttpEvent<any>> {
-		throw new Error("Method not implemented.");
-	}
 
 	private url : String
 
