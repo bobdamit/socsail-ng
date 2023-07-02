@@ -1,0 +1,69 @@
+
+
+agm-map {
+ /* height: 300px;*/
+}
+
+div.sidebar {
+	line-height: 1.2em;
+}
+
+
+#loading {
+	font-size: 24pt;
+	margin: 0;
+	position: absolute;
+	top: 50%;
+	left: 50%;
+	-ms-transform: translate(-50%, -50%);
+	transform: translate(-50%, -50%);
+}
+
+.title {
+	font-weight: bold;
+	font-size: 12pt;
+}
+
+.credits {
+	font-size: 7.5pt;
+	white-space: nowrap;
+	overflow: hidden;
+}
+
+.boatTitle {
+	text-decoration:underline;
+	text-align: center;
+	font-weight: bold;
+	font-size: 15pt;
+	margin-bottom: 5px;
+}
+
+.teenytiny {
+	font-size: 8pt;
+}
+
+.matgrid-left {
+position: absolute;
+  left: 5px;
+}
+
+.matgrid-right {
+position: absolute;
+  right: 5px;
+}
+
+.sidebar {
+	padding:6px;
+	width:150px;
+	background-color: #25a;
+	height: 99%;
+	white-space: nowrap;
+	overflow: hidden;
+	text-overflow: ellipsis;	
+}
+
+.thumb-img {
+	width:140px;
+	border-radius: 5px;
+	margin:5px;
+}

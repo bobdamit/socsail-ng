@@ -1,0 +1,37 @@
+
+<div id="overlay" >
+
+  <agm-map #map
+		[latitude]="center.lat"
+		[longitude]="center.lng"
+		[controlSize]=22
+		[disableDefaultUI]=false
+		[zoom]="zoom"
+		[minZoom]="minZoom"
+		[maxZoom]="maxZoom"
+		style="height:{{height}}"  >
+
+
+	  	<agm-marker *ngIf="criteria.hoursBack && result && result.trackDataList.length"
+	  		[latitude]="endMarker.lat" [longitude]="endMarker.lng" [title]="'End of the track'"	>
+	  	</agm-marker>
+
+
+	  	<agm-marker
+	  		*ngFor="let v of vectors" [latitude]="v.lat" [longitude]="v.lng" [iconUrl]="v.icon" [title]="v.txt"  >
+	  	</agm-marker>
+
+		<agm-polyline *ngIf="result"
+			[strokeColor]="'#2196f3'">
+			<agm-polyline-point *ngFor="let td of result.trackDataList" [latitude]="td.point.lat" [longitude]="td.point.lng">
+			</agm-polyline-point>
+		</agm-polyline>
+
+	</agm-map>
+</div>
+
+
+
+<span *ngIf="!result || loading">Loading...</span>
+
+
