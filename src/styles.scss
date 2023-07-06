@@ -1,35 +1,91 @@
+/* You can add global styles to this file, and also import other style files */
 
-// Custom Theming for Angular Material
-// For more information: https://material.angular.io/guide/theming
-@import '~@angular/material/theming';
-// Plus imports for other components in your app.
-
-// Include the common styles for Angular Material. We include this here so that you only
-// have to load a single css file for Angular Material in your app.
-// Be sure that you only ever include this mixin once!
-@include mat-core();
-
-// Define the palettes for your theme using the Material Design palettes available in palette.scss
-// (imported above). For each palette, you can optionally specify a default, lighter, and darker
-// hue. Available color palettes: https://material.io/design/color/
-$socsail-ng-primary: mat-palette($mat-indigo);
-$socsail-ng-accent: mat-palette($mat-pink, A200, A100, A400);
-
-// The warn palette is optional (defaults to red).
-$socsail-ng-warn: mat-palette($mat-red);
-
-// Create the theme object (a Sass map containing all of the palettes).
-$socsail-ng-theme: mat-light-theme($socsail-ng-primary, $socsail-ng-accent, $socsail-ng-warn);
-
-// Include theme styles for core and each component used in your app.
-// Alternatively, you can import and @include the theme mixins for each component
-// that you are using.
-@include angular-material-theme($socsail-ng-theme);
-
-
-
-body {
-	background-color: transparent;
-}
 html, body { height: 100%; }
 body { margin: 0; font-family: Roboto, "Helvetica Neue", sans-serif; }
+
+.tiny {
+	font-size: 8pt;
+}
+
+.error {
+	color: rgb(129, 17, 17);
+	background-color: rgb(155, 134, 134);
+}
+
+.flx-row {
+	display: flex;
+	flex-wrap: wrap;
+	flex-direction: row;
+ }
+
+ .flx-row-right {
+	display: flex;
+	flex-wrap: wrap;
+	flex-direction: row;
+	justify-content: flex-end;
+ }
+
+ .flx-col {
+	display: flex;
+	flex-direction: column;
+ }
+
+.flx-row-nowrap {
+	display: flex;
+	flex-direction: row;
+	flex-wrap: nowrap;
+}
+
+.flx-spacer {
+	flex: 1 1 auto;
+ }
+ 
+ .flx-end {
+	justify-items: flex-end;
+ }
+
+ .flx-col-space-between {
+	justify-content: space-between;
+ }
+ 
+
+ .flx-50 {
+	 flex-basis:50px;
+ }
+ .flx-200 {
+	 flex-basis:200px;
+ }
+ .flx-250 {
+	 flex-basis:250px;
+ }
+ .flx-300 {
+	 flex-basis:300px;
+ }
+ 
+ .flx-grow-1 {
+	 flex-grow: 1;
+ }
+ 
+ .flx-grow-2 {
+	 flex-grow: 2;
+ }
+ 
+ .flx-grow-4 {
+	 flex-grow: 4;
+ }
+ 
+ .flx-grow-8 {
+	flex-grow: 8;
+}
+ 
+.flx-vcenter {
+	 align-self: center;
+ }
+
+ .flx-item {
+	margin-right: 20px;
+ }
+
+ mat-form-field {
+	width: 100%;
+ }

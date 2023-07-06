@@ -1,7 +1,6 @@
 import { BrowserModule } from '@angular/platform-browser';
 import { NgModule } from '@angular/core';
 import { HttpClientModule } from '@angular/common/http';
-import { AgmCoreModule } from '@agm/core';
 import { AppComponent } from './app.component';
 import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
 import {MatSidenavModule} from '@angular/material/sidenav';
@@ -14,9 +13,7 @@ import {MatGridListModule} from '@angular/material/grid-list';
     AppComponent
   ],
   imports: [
-    BrowserModule,  HttpClientModule, AgmCoreModule.forRoot({
-      apiKey: 'AIzaSyArVPLvPrMKhvEODm5f-vtP956vFcE-wm4'
-    }), BrowserAnimationsModule,
+    BrowserModule,  HttpClientModule, BrowserAnimationsModule,
 	MatSidenavModule,
 	MatButtonModule,
 	MatIconModule,

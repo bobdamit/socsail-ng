@@ -1,7 +1,7 @@
 import { Component, OnInit, ViewChild, ElementRef } from '@angular/core';
 import { TrackService, TrackCriteria } from './track.service';
 import { TrackResponse } from './track-response';
-import { AgmMap } from '@agm/core';
+import {Loader, LoaderOptions} from 'google-maps';
 import { MatSidenavModule } from '@angular/material/sidenav';
 
 
@@ -20,7 +20,6 @@ export class AppComponent implements OnInit {
 	}
 	criteria: TrackCriteria;
 
-	@ViewChild('map', { static: true }) map: AgmMap;
 
 	zoom = 9;
 	minZoom = 4;
@@ -33,7 +32,7 @@ export class AppComponent implements OnInit {
 	sidePanelOpened: boolean;
 
 	loading: boolean;
-	result: TrackResponse;
+	trackResponse: TrackResponse;
 	vectors : VectorDisplay[];
 	showVectors : boolean;
 	height : string = "300px";
@@ -41,13 +40,45 @@ export class AppComponent implements OnInit {
 	bigVersionLink : string;
 	error: string;
 
+	options: LoaderOptions = { 
+		version:"weekly", libraries: ["maps"] 
+	}
+
+	gmLoader = new Loader('AIzaSyDnHXOmRnzs8807X8uQ34Zjn7Jut30_SiQ', this.options);
+
+	async loadMap() {
+		const google = await this.gmLoader.load();
+		console.info("google loaded");
+
+		const map = new google.maps.Map(document.getElementById('map'), 
+			{
+				center: {lat: 41.397, lng: -72.644},
+				zoom: 8,
+			});
+
+			this.trackService.getTrack(this.criteria)
+			.subscribe( {
+				next:result => {
+					this.trackResponse = result;
+					this.buildModel();
+					this.loading = false;
+				},
+				error: err => {
+					this.error = err;
+					this.loading = false;
+				}
+			});
+
+
+
+	}
 
 	ngOnInit(): void {
+	
 		const urlParams = new URLSearchParams(window.location.search);
 
 		this.bigVersionLink = window.location + "&big=1";
 
-		this.map.mapTypeId = "HYBRID";
 
 		// Pick up some criteria from the URL query params
 		this.criteria.vuid = urlParams.get("vuid");  //e3d634c8-506c-4a75-8eb1-930b37fa5582
@@ -70,50 +101,28 @@ export class AppComponent implements OnInit {
 
     if(!this.criteria.vuid) {
       this.error = "No Vessel ID";
+		console.error("no vuid on url");
     }
     else {
-      this.fetchAndDraw();
+		console.info(JSON.stringify(this.criteria));
+		this.loadMap();
     }
-
 
 	}
 
-  private fetchAndDraw() {
-		this.loading = true;
 
-		this.trackService.getTrack(this.criteria)
-			.subscribe(
-				result => {
-					this.result = result;
-					this.buildModel();
-					this.loading = false;
-				},
-				error => {
-					this.error = error;
-					console.log("caught error " + error.message);
-					this.loading = false;
-				}
-			);
-
-
-		this.center = {
-			lat: 41.5,
-			lng: -71,
-		};
-
-  }
 
 	private buildModel(): void {
-		this.center = this.result.center;
-		if (this.criteria.hoursBack && this.result.trackDataList.length) {
-			this.endMarker = this.result.trackDataList[this.result.trackDataList.length - 1].point;
+		this.center = this.trackResponse.center;
+		if (this.criteria.hoursBack && this.trackResponse.trackDataList.length) {
+			this.endMarker = this.trackResponse.trackDataList[this.trackResponse.trackDataList.length - 1].point;
 		}
 
 		// Build data for Vector Display
 		let markerUrlBase = "http://earth.google.com/images/kml-icons/track-directional/track-";
 
 		this.vectors = new Array<VectorDisplay>();
-		for(let v of this.result.trackVectorList) {
+		for(let v of this.trackResponse.trackVectorList) {
 			let markerIndex = Math.floor(v.bearing/22.5);
 			let markerUrl = markerUrlBase.concat(markerIndex.toString()).concat(".png");
 			let kts = v.speedMps * 1.943844492441;
@@ -121,7 +130,7 @@ export class AppComponent implements OnInit {
 			this.vectors.push({lat: v.point.lat, lng: v.point.lng, txt:markerText, icon: {url:markerUrl,scaledSize:{height:40,width:40}}} );
 		}
 
-		this.zoom = Math.floor(5000/this.result.distanceNm);
+		this.zoom = Math.floor(5000/this.trackResponse.distanceNm);
 		this.zoom = Math.max(this.minZoom, this.zoom);
 		this.zoom = Math.min(12,this.zoom);
 		console.log(`setting zoom to ${this.zoom}`);
