@@ -19,14 +19,7 @@ import { environment } from 'src/environments/environment';
 export class TrackService {
 
 	constructor(private http: HttpClient) {
-		this.url =
-    "https://rocksci-apps.xyz/api/socsail/track/query";
-   // "http://localhost:8889/api/socsail";
 	}
-
-
-	private url : String
-
 
 	getTrack(criteria : TrackCriteria) : Observable<any> {
 		const httpOptions = {
@@ -35,10 +28,9 @@ export class TrackService {
 		  })
 		};
 
-		let endpoint = this.url.concat(criteria.asQueryArgs());
+		let url = `${environment.serviceHost}/track/query${criteria.asQueryArgs()}`;
 
-
-		return this.http.get<TrackResponse>(endpoint, httpOptions);
+		return this.http.get<TrackResponse>(url, httpOptions);
 	}
 
 }

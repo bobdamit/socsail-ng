@@ -2,8 +2,6 @@ import { Component, OnInit, ViewChild, ElementRef } from '@angular/core';
 import { TrackService, TrackCriteria } from './track.service';
 import { TrackResponse } from './track-response';
 import {Loader, LoaderOptions} from 'google-maps';
-import { MatSidenavModule } from '@angular/material/sidenav';
-
 
 @Component({
 	selector: 'app-root',
@@ -20,6 +18,8 @@ export class AppComponent implements OnInit {
 	}
 	criteria: TrackCriteria;
 
+	@ViewChild('map') mapElement: any;
+	map: google.maps.Map;	
 
 	zoom = 9;
 	minZoom = 4;
@@ -50,13 +50,16 @@ export class AppComponent implements OnInit {
 		const google = await this.gmLoader.load();
 		console.info("google loaded");
 
-		const map = new google.maps.Map(document.getElementById('map'), 
-			{
-				center: {lat: 41.397, lng: -72.644},
-				zoom: 8,
-			});
+		const mapProps = 	{
+			center: {lat: 41.5, lng: -71.8},
+			zoom: this.zoom,
+			mapTypeId : google.maps.MapTypeId.TERRAIN
+		};
 
-			this.trackService.getTrack(this.criteria)
+
+		this.map = new google.maps.Map(this.mapElement.nativeElement, mapProps);
+
+		this.trackService.getTrack(this.criteria)
 			.subscribe( {
 				next:result => {
 					this.trackResponse = result;
@@ -68,8 +71,6 @@ export class AppComponent implements OnInit {
 					this.loading = false;
 				}
 			});
-
-
 
 	}
 
@@ -121,19 +122,34 @@ export class AppComponent implements OnInit {
 		// Build data for Vector Display
 		let markerUrlBase = "http://earth.google.com/images/kml-icons/track-directional/track-";
 
+		const KnotsPerMPS = 1.943844492441;
+
 		this.vectors = new Array<VectorDisplay>();
 		for(let v of this.trackResponse.trackVectorList) {
 			let markerIndex = Math.floor(v.bearing/22.5);
-			let markerUrl = markerUrlBase.concat(markerIndex.toString()).concat(".png");
-			let kts = v.speedMps * 1.943844492441;
+			let markerUrl = `${markerUrlBase}${markerIndex.toString()}.png`;
+
+			let kts = v.speedMps * KnotsPerMPS;
+			
 			let markerText = `${v.dateTime}: Speed: ${kts.toFixed(2)}  Bearing: ${v.bearing.toFixed()} Degrees`;
-			this.vectors.push({lat: v.point.lat, lng: v.point.lng, txt:markerText, icon: {url:markerUrl,scaledSize:{height:40,width:40}}} );
+
+			this.vectors.push({
+				lat: v.point.lat, 
+				lng: v.point.lng, 
+				txt:markerText, 
+				icon: {
+					url:markerUrl,scaledSize:{
+						height:40,
+						width:40
+					}
+				}
+			});
 		}
 
 		this.zoom = Math.floor(5000/this.trackResponse.distanceNm);
 		this.zoom = Math.max(this.minZoom, this.zoom);
 		this.zoom = Math.min(12,this.zoom);
-		console.log(`setting zoom to ${this.zoom}`);
+		console.info(`setting zoom to ${this.zoom}`);
 	}
 }
 
