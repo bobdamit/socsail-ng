@@ -4,7 +4,8 @@
 
 export const environment = {
   production: true,
-  serviceHost : "https://rocksci-apps.xyz/api/socsail"
+  serviceHost : "https://rocksci-apps.xyz/api/socsail",
+  defaultVuid : ''
 };
 
 /*

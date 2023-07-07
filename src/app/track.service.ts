@@ -38,17 +38,17 @@ export class TrackService {
 
 export class TrackCriteria {
 	vuid : string;
-	from : Date;
-	thru : Date;
+	fromUtc : Date;
+	thruUtc : Date;
 	hoursBack : number;
 
 	asQueryArgs() : string {
 		let p =  `?vuid=${this.vuid}`;
-		if(this.from) {
-			p = p.concat(`&start=${formatDate(this.from, "yyyy-MM-dd'T'HH:mm:ss", "en_US")}`);
+		if(this.fromUtc) {
+			p = p.concat(`&start-utc=${formatDate(this.fromUtc, "yyyy-MM-dd'T'HH:mm:ss", "en_US")}`);
 		}
-		if(this.thru) {
-			p = p.concat("&end=").concat(formatDate(this.thru, "yyyy-MM-dd'T'HH:mm:ss", "en_US"));
+		if(this.thruUtc) {
+			p = p.concat("&end-utc=").concat(formatDate(this.thruUtc, "yyyy-MM-dd'T'HH:mm:ss", "en_US"));
 		}
 		if(this.hoursBack) {
 			p = p.concat(`&hrsback=${this.hoursBack.toString(10)}`);

@@ -1,8 +1,8 @@
 export class TrackResponse {
 	vessel: Vessel;
 
-	start: Date;
-	end: Date;
+	startUtc: Date;
+	endUtc: Date;
 	center : Point;
 	distanceNm : number;
 	avgSpeedKt : number;
@@ -12,7 +12,7 @@ export class TrackResponse {
 }
 
 export class TrackData {
-	dateTime: Date;
+	dateTimeUtc: Date;
 	point: Point;
 }
 

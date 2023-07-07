@@ -2,6 +2,7 @@ import { Component, OnInit, ViewChild, ElementRef } from '@angular/core';
 import { TrackService, TrackCriteria } from './track.service';
 import { TrackResponse } from './track-response';
 import {Loader, LoaderOptions} from 'google-maps';
+import { environment } from 'src/environments/environment';
 
 @Component({
 	selector: 'app-root',
@@ -33,7 +34,7 @@ export class AppComponent implements OnInit {
 
 	loading: boolean;
 	trackResponse: TrackResponse;
-	vectors : VectorDisplay[];
+	schmectors : VectorDisplay[];
 	showVectors : boolean;
 	height : string = "300px";
 	big : boolean;
@@ -51,7 +52,7 @@ export class AppComponent implements OnInit {
 		console.info("google loaded");
 
 		const mapProps = 	{
-			center: {lat: 41.5, lng: -71.8},
+			center: {lat: -41.5, lng: -71.8},
 			zoom: this.zoom,
 			mapTypeId : google.maps.MapTypeId.TERRAIN
 		};
@@ -63,7 +64,7 @@ export class AppComponent implements OnInit {
 			.subscribe( {
 				next:result => {
 					this.trackResponse = result;
-					this.buildModel();
+					this.drawModel();
 					this.loading = false;
 				},
 				error: err => {
@@ -83,12 +84,16 @@ export class AppComponent implements OnInit {
 
 		// Pick up some criteria from the URL query params
 		this.criteria.vuid = urlParams.get("vuid");  //e3d634c8-506c-4a75-8eb1-930b37fa5582
-		if (urlParams.get("start")) {
-			this.criteria.from = new Date(urlParams.get("start"));
+		if(!this.criteria.vuid) {
+			this.criteria.vuid = environment.defaultVuid;
 		}
 
-		if (urlParams.get("end")) {
-			this.criteria.thru = new Date(urlParams.get("end"));
+		if (urlParams.get("start-utc")) {
+			this.criteria.fromUtc = new Date(urlParams.get("start-utc"));
+		}
+
+		if (urlParams.get("end-utc")) {
+			this.criteria.thruUtc = new Date(urlParams.get("end-utc"));
 		}
 
 		if (urlParams.get("hrsback")) {
@@ -113,31 +118,72 @@ export class AppComponent implements OnInit {
 
 
 
-	private buildModel(): void {
+	private drawModel(): void {
 		this.center = this.trackResponse.center;
+		
+		console.info(`Center: ${JSON.stringify(this.center)}`);
+
 		if (this.criteria.hoursBack && this.trackResponse.trackDataList.length) {
 			this.endMarker = this.trackResponse.trackDataList[this.trackResponse.trackDataList.length - 1].point;
 		}
+
+		let points  =  new Array<google.maps.LatLng>();
+		for(let trackPoint of this.trackResponse.trackDataList) {
+			points.push(
+				new google.maps.LatLng(trackPoint.point.lat, trackPoint.point.lng)
+			);
+		}
+		let line = new google.maps.Polyline(
+			{
+				path : points,
+				geodesic : true,
+				strokeColor : "#ff0000",
+				strokeOpacity:1.0,
+				strokeWeight:2
+			}
+		);
+		line.setMap(this.map);
 
 		// Build data for Vector Display
 		let markerUrlBase = "http://earth.google.com/images/kml-icons/track-directional/track-";
 
 		const KnotsPerMPS = 1.943844492441;
 
-		this.vectors = new Array<VectorDisplay>();
+		let vectors = new Array<google.maps.Marker>();
 		for(let v of this.trackResponse.trackVectorList) {
 			let markerIndex = Math.floor(v.bearing/22.5);
 			let markerUrl = `${markerUrlBase}${markerIndex.toString()}.png`;
 
 			let kts = v.speedMps * KnotsPerMPS;
 			
-			let markerText = `${v.dateTime}: Speed: ${kts.toFixed(2)}  Bearing: ${v.bearing.toFixed()} Degrees`;
+			let markerText = `${v.dateTimeUtc} (UTC) SOG: ${kts.toFixed(2)} KTs  COG: ${v.bearing.toFixed()} Degrees`;
 
-			this.vectors.push({
+			vectors.push( new google.maps.Marker( 
+				{
+				position : {
+					lat: v.point.lat, 
+					lng : v.point.lng
+				}, 
+				title : markerText,
+				icon : markerUrl,
+				map : this.map}));
+		}
+
+		this.schmectors = new Array<VectorDisplay>();
+		for(let v of this.trackResponse.trackVectorList) {
+			let markerIndex = Math.floor(v.bearing/22.5);
+			let markerUrl = `${markerUrlBase}${markerIndex.toString()}.png`;
+
+			let kts = v.speedMps * KnotsPerMPS;
+			
+			let markerText = `${v.dateTimeUtc} (UTC) Speed: ${kts.toFixed(2)} KTs  Bearing: ${v.bearing.toFixed()} Degrees`;
+
+			this.schmectors.push({
 				lat: v.point.lat, 
 				lng: v.point.lng, 
 				txt:markerText, 
 				icon: {
+					map : this.map, 
 					url:markerUrl,scaledSize:{
 						height:40,
 						width:40
@@ -150,6 +196,13 @@ export class AppComponent implements OnInit {
 		this.zoom = Math.max(this.minZoom, this.zoom);
 		this.zoom = Math.min(12,this.zoom);
 		console.info(`setting zoom to ${this.zoom}`);
+
+		this.map.setZoom(this.zoom);
+		this.map.setCenter({
+			lat : this.center.lat,
+			lng : this.center.lng
+		});
+
 	}
 }
 
