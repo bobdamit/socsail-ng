@@ -169,20 +169,20 @@ export class AppComponent implements OnInit {
 
 			// build a Bounds rectangle
 			let gBounds = new google.maps.LatLngBounds(
-				{lat: this.trackResponse.geoBounds.topRight.lat, lng : this.trackResponse.geoBounds.topRight.lng},
-				{lat: this.trackResponse.geoBounds.bottomLeft.lat, lng : this.trackResponse.geoBounds.bottomLeft.lng}
+				{lat: this.trackResponse.geoBounds.bottomLeft.lat, lng : this.trackResponse.geoBounds.bottomLeft.lng},
+				{lat: this.trackResponse.geoBounds.topRight.lat, lng : this.trackResponse.geoBounds.topRight.lng}
 			);
 
 			console.info(JSON.stringify(gBounds));
 
 
-			this.map.setZoom(this.zoom);
+//			this.map.setZoom(this.zoom);
 			this.map.setCenter({
 				lat: this.center.lat,
 				lng: this.center.lng
 			});
 
-//			this.map.fitBounds(gBounds);
+			this.map.fitBounds(gBounds, 50);
 		}
 		catch(err) {
 			this.error = err;
