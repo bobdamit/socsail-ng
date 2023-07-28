@@ -2,7 +2,8 @@ import { Component, OnInit, ViewChild, ElementRef } from '@angular/core';
 import { TrackService, TrackCriteria } from './track.service';
 import { TrackResponse } from './track-response';
 import { Loader, LoaderOptions } from 'google-maps';
-import { environment } from 'src/environments/environment';
+import { environment } from 'src/environments/environment'; 
+import { BrowserModule, Meta } from '@angular/platform-browser';
 
 @Component({
 	selector: 'app-root',
@@ -14,7 +15,7 @@ import { environment } from 'src/environments/environment';
 
 export class AppComponent implements OnInit {
 
-	constructor(private trackService: TrackService) {
+	constructor(private trackService: TrackService, private metaService : Meta) {
 		this.criteria = new TrackCriteria();
 	}
 	criteria: TrackCriteria;
@@ -73,9 +74,14 @@ export class AppComponent implements OnInit {
 
 	ngOnInit(): void {
 
+		// give us a nice og:imnage for the kids on social media
+		// TODO: get this dynamically from the vessel
+		const imageUrl = "https://allhandssailing.com/wp-content/uploads/2022/06/drone1.png";
+		this.metaService.addTag( { property: 'og:image', content: imageUrl } );
+
+		this.metaService.addTag( { name:'description',content:"Bob's super deluxe sail tracker"});
 		const urlParams = new URLSearchParams(window.location.search);
-
-
+	
 		// Pick up some criteria from the URL query params
 		this.criteria.vuid = urlParams.get("vuid");  //e3d634c8-506c-4a75-8eb1-930b37fa5582
 		if (!this.criteria.vuid) {
