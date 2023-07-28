@@ -77,7 +77,7 @@ export class AppComponent implements OnInit {
 		// give us a nice og:imnage for the kids on social media
 		// TODO: get this dynamically from the vessel
 		const imageUrl = "https://allhandssailing.com/wp-content/uploads/2022/06/drone1.png";
-		this.metaService.addTag( { property: 'og:image', content: imageUrl } );
+		this.metaService.addTag( { name: 'og:image', content: imageUrl } );
 
 		this.metaService.addTag( { name:'description',content:"Bob's super deluxe sail tracker"});
 		const urlParams = new URLSearchParams(window.location.search);
