@@ -1,18 +1,18 @@
 import { ComponentFixture, TestBed } from '@angular/core/testing';
 
-import { GoogleMapComponent } from './google.map.component';
+import { TrackViewComponent } from './track-view.component';
 
-describe('GoogleMapComponent', () => {
-  let component: GoogleMapComponent;
-  let fixture: ComponentFixture<GoogleMapComponent>;
+describe('TrackViewComponent', () => {
+  let component: TrackViewComponent;
+  let fixture: ComponentFixture<TrackViewComponent>;
 
   beforeEach(async () => {
     await TestBed.configureTestingModule({
-      declarations: [ GoogleMapComponent ]
+      declarations: [ TrackViewComponent ]
     })
     .compileComponents();
 
-    fixture = TestBed.createComponent(GoogleMapComponent);
+    fixture = TestBed.createComponent(TrackViewComponent);
     component = fixture.componentInstance;
     fixture.detectChanges();
   });

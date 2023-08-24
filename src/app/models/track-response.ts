@@ -1,3 +1,6 @@
+import { Vessel } from "./user-models";
+
+
 export class TrackResponse {
 	vessel: Vessel;
 	request: TrackQueryRequest;
@@ -39,25 +42,8 @@ export interface TrackQueryRequest {
 }
 
 
-export class Point {
+export interface Point {
 	lat: number;
 	lng: number;
 }
 
-export class Vessel {
-
-	vuid: string;
-	name: string;
-	manufacturer: string;
-	model: string;
-	length: number
-	lengthUnit: string;
-	year: number;
-	description: string;
-	mmsi: string;
-	port:string;
-	thumbUrl: string;
-	imgUrl: string;
-	linkUrl : string;
-	linkText: string;
-}

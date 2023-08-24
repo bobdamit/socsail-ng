@@ -1,9 +1,11 @@
-import { Component, OnInit, ViewChild, ElementRef } from '@angular/core';
-import { TrackService, TrackCriteria } from './track.service';
-import { TrackResponse } from './track-response';
+import { Component, OnInit, ViewChild } from '@angular/core';
+import { TrackResponse } from '../models/track-response';
 import { Loader, LoaderOptions } from 'google-maps';
-import { environment } from 'src/environments/environment'; 
-import { BrowserModule, Meta } from '@angular/platform-browser';
+import { environment } from 'src/environments/environment';
+
+import { Meta } from '@angular/platform-browser';
+import { TrackCriteria, TrackService } from '../services/track.service';
+
 
 @Component({
 	selector: 'app-root',
@@ -11,7 +13,7 @@ import { BrowserModule, Meta } from '@angular/platform-browser';
 	styleUrls: ['./app.component.scss']
 })
 
-// https://angular-maps.com/api-docs/agm-core/index.html
+
 
 export class AppComponent implements OnInit {
 
@@ -78,6 +80,8 @@ export class AppComponent implements OnInit {
 		// TODO: get this dynamically from the vessel
 		const imageUrl = "https://allhandssailing.com/wp-content/uploads/2022/06/drone1.png";
 		this.metaService.addTag( { property: 'og:image', content: imageUrl } );
+		this.metaService.addTag( { property: 'og:image:secure_url', content: imageUrl } );
+
 
 		this.metaService.addTag( { name:'description',content:"Bob's super deluxe sail tracker"});
 		const urlParams = new URLSearchParams(window.location.search);
@@ -161,6 +165,7 @@ export class AppComponent implements OnInit {
 							lng: v.point.lng
 						},
 						title: markerText,
+						opacity: .35,
 						icon: markerUrl,
 						map: this.map
 					}));
@@ -194,11 +199,6 @@ export class AppComponent implements OnInit {
 			this.error = err;
 		}
 	}
+
 }
 
-class VectorDisplay {
-	lat: number;
-	lng: number;
-	icon: any;
-	txt: string
-}

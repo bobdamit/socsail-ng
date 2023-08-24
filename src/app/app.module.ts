@@ -1,25 +1,31 @@
 import { BrowserModule, Meta } from '@angular/platform-browser';
 import { NgModule } from '@angular/core';
 import { HttpClientModule } from '@angular/common/http';
-import { AppComponent } from './app.component';
+
 import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
 import {MatSidenavModule} from '@angular/material/sidenav';
 import {MatButtonModule} from '@angular/material/button';
 import {MatIconModule} from '@angular/material/icon';
 import {MatGridListModule} from '@angular/material/grid-list';
-import { GoogleMapComponent } from './google.map/google.map.component';
+import { AppComponent } from './components/app.component';
+import { TrackViewComponent } from './components/track-view/track-view.component';
+import { RoutingModule } from './routing/routing.module';
+import { LandingComponent } from './landing/landing.component';
+
 
 @NgModule({
   declarations: [
     AppComponent,
-    GoogleMapComponent
+    TrackViewComponent,
+    LandingComponent
   ],
   imports: [
     BrowserModule,  HttpClientModule, BrowserAnimationsModule,
 	MatSidenavModule,
 	MatButtonModule,
 	MatIconModule,
-	MatGridListModule
+	MatGridListModule,
+	RoutingModule
   ],
   providers: [HttpClientModule, Meta],
   bootstrap: [AppComponent]
